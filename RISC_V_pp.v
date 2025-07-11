@@ -71,7 +71,7 @@ module RISC_V_pp (
                                 .rst_n(rst_n),
                                 .Instruc_IFID(Instruc_IFID),
                                 .PC_IFID(PC_IFID),
-                                .write_Data(memData_Out_MEMWB),
+                                .write_Data(memData_Out_MEM),
                                 .rd(rd_MEMWB),
                                 .RegWrite(RegWrite_MEMWB),
                                 .control_mux_sel(control_mux_sel),
@@ -98,7 +98,7 @@ module RISC_V_pp (
                             .ForwardA(ForwardA),
                             .ForwardB(ForwardB));
 
-    assign forward_data_MEMWB = mem2reg_MEMWB ? memData_Out_MEMWB : ALU_result_MEMWB;
+//    assign forward_data_MEMWB = mem2reg_MEMWB ? memData_Out_MEMWB : ALU_result_MEMWB;
 
     EX_hazard execute(.clk(clk),
                     .rst_n(rst_n),
@@ -115,7 +115,7 @@ module RISC_V_pp (
                     .ALUSrc_IDEX(ALUSrc_IDEX),
                     .RegWrite_IDEX(RegWrite_IDEX),
                     .ALUOp_IDEX(ALUOp_IDEX),
-                    .memData_Out_MEMWB(forward_data_MEMWB),
+                    .memData_Out_MEM(memData_Out_MEM),
                     .alu_result_EXMEM(alu_result_EXMEM),
                     .ForwardA(ForwardA),
                     .ForwardB(ForwardB),

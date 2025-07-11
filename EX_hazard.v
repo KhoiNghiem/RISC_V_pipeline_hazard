@@ -14,7 +14,7 @@ module EX_hazard (
     input ALUSrc_IDEX,
     input RegWrite_IDEX,
     input [1:0] ALUOp_IDEX,
-    input [31:0] memData_Out_MEMWB,
+    input [31:0] memData_Out_MEM,
     input [31:0] alu_result_EXMEM,
     input [1:0] ForwardA,
     input [1:0] ForwardB,
@@ -45,13 +45,13 @@ module EX_hazard (
 
     mux3 ex_mux1(.sel(ForwardA),
                 .A(read_data1_IDEX),
-                .B(memData_Out_MEMWB),
+                .B(memData_Out_MEM),
                 .C(alu_result_EXMEM),
                 .mux_out(mux3_1_ex));
 
     mux3 ex_mux2(.sel(ForwardB),
                 .A(read_data2_IDEX),
-                .B(memData_Out_MEMWB),
+                .B(memData_Out_MEM),
                 .C(alu_result_EXMEM),
                 .mux_out(mux3_2_ex));
 

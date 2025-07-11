@@ -6,8 +6,8 @@ module WB_stage (
 );
 
     mux wb_mux(.sel(mem2reg_MEMWB),
-                .A(memData_Out_MEMWB),
-                .B(read_Address_MEMWB),
+                .A(read_Address_MEMWB),
+                .B(memData_Out_MEMWB),
                 .Mux_out(memData_Out_MEM));
 
 endmodule
