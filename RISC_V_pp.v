@@ -56,6 +56,7 @@ module RISC_V_pp (
                                 .PCWrite(PCWrite),
                                 .Write_IFID(Write_IFID),
                                 .PCTarget_IF(PC_EXMEM),
+                                .flush_IF(flush_IF),
                                 .Instruc_IFID(Instruc_IFID),
                                 .PC_IFID(PC_IFID));
 
@@ -87,7 +88,8 @@ module RISC_V_pp (
                                 .memWrite_IDEX(memWrite_IDEX),
                                 .ALUSrc_IDEX(ALUSrc_IDEX),
                                 .RegWrite_IDEX(RegWrite_IDEX),
-                                .ALUOp_IDEX(ALUOp_IDEX));
+                                .ALUOp_IDEX(ALUOp_IDEX),
+                                .flush_IF(flush_IF));
 
     forwarding_unit forward(.rs1_IDEX(instruc_IDEX[19:15]),
                             .rs2_IDEX(instruc_IDEX[24:20]),

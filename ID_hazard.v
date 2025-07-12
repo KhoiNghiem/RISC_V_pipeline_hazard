@@ -21,7 +21,8 @@ module ID_hazard (
     output reg        memWrite_IDEX,
     output reg        ALUSrc_IDEX,
     output reg        RegWrite_IDEX,
-    output reg [1:0]  ALUOp_IDEX
+    output reg [1:0]  ALUOp_IDEX,
+    output flush_IF
 ); 
 
     wire [31:0] read_data1_IDEX_reg;
@@ -82,6 +83,12 @@ module ID_hazard (
     assign memWrite_ID  = control_signals_muxed[3];
     assign branch_ID    = control_signals_muxed[2];
     assign ALUOp_ID     = control_signals_muxed[1:0];
+
+    flush_unit flush_u(.branch(branch_ID),
+                                .rs1(Instruc_IFID[19:15]),
+                                .rs2(Instruc_IFID[24:20]),
+                                .funct3(Instruc_IFID[14:12]),
+                                .flush_IF(flush_IF));
 
 
     always @(posedge clk or negedge rst_n) begin

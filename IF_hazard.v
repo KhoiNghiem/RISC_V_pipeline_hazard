@@ -5,6 +5,7 @@ module IF_hazard (
     input [31:0] PCTarget_IF,
     input PCWrite,
     input Write_IFID,
+    input flush_IF,
     output [31:0] Instruc_IFID,
     output [31:0] PC_IFID
 );
@@ -48,7 +49,7 @@ module IF_hazard (
 
     // IF/ID pipeline register
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (!rst_n || flush_IF) begin
             IFID_Instruction <= 32'b0;
             IFID_PC <= 32'b0;
             // IFID_PCPlus4 <= 32'b0;
