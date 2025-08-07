@@ -2,16 +2,16 @@ module ID_hazard (
     input wire clk,
     input wire rst_n,
     input wire [31:0] Instruc_IFID,
-    input wire [31:0] PC_IFID,
-    input [31:0] write_Data,
-    input [4:0] rd,
+    input wire signed [31:0] PC_IFID,
+    input wire signed [31:0] write_Data,
+    input wire [4:0] rd,
     input wire RegWrite,
     input wire control_mux_sel,
 
-    output reg [31:0] read_data1_IDEX,
-    output reg [31:0] read_data2_IDEX,
-    output reg [31:0] PC_IDEX,
-    output reg [31:0] imm_IDEX,
+    output reg signed [31:0] read_data1_IDEX,
+    output reg signed [31:0] read_data2_IDEX,
+    output reg signed [31:0] PC_IDEX,
+    output reg signed [31:0] imm_IDEX,
     output reg [31:0] instruc_IDEX,
     output reg [4:0]  rd_IDEX,
 
@@ -25,9 +25,9 @@ module ID_hazard (
     output flush_IF
 ); 
 
-    wire [31:0] read_data1_IDEX_reg;
-    wire [31:0] read_data2_IDEX_reg;
-    wire [31:0] imm_IDEX_reg;
+    wire signed [31:0] read_data1_IDEX_reg;
+    wire signed [31:0] read_data2_IDEX_reg;
+    wire signed [31:0] imm_IDEX_reg;
 
     wire [1:0] ALUOp_ID;
     wire regWrite_ID;

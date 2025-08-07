@@ -1,7 +1,7 @@
 module alu_unit (
-    input [31:0] A, B, 
+    input signed [31:0] A, B, 
     input [3:0] control_in, 
-    output reg [31:0] ALU_result, 
+    output reg signed [31:0] ALU_result, 
     output reg zero
 );
 

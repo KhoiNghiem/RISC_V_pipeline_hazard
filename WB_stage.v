@@ -1,8 +1,8 @@
 module WB_stage (
-    input [31:0] memData_Out_MEMWB,
-    input [31:0] read_Address_MEMWB,
+    input signed [31:0] memData_Out_MEMWB,
+    input signed [31:0] read_Address_MEMWB,
     input        mem2reg_MEMWB,
-    output [31:0] memData_Out_MEM
+    output signed [31:0] memData_Out_MEM
 );
 
     mux wb_mux(.sel(mem2reg_MEMWB),

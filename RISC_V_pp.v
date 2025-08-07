@@ -4,12 +4,12 @@ module RISC_V_pp (
 );
 
     wire [31:0] Instruc_IFID;
-    wire [31:0] PC_IFID;
+    wire signed [31:0] PC_IFID;
 
-    wire [31:0] read_data1_IDEX;
-    wire [31:0] read_data2_IDEX;
-    wire [31:0] PC_IDEX;
-    wire [31:0] imm_IDEX;
+    wire signed [31:0] read_data1_IDEX;
+    wire signed [31:0] read_data2_IDEX;
+    wire signed [31:0] PC_IDEX;
+    wire signed [31:0] imm_IDEX;
     wire [31:0] instruc_IDEX;
     wire [4:0]  rd_IDEX;
     wire        branch_IDEX;
@@ -20,9 +20,9 @@ module RISC_V_pp (
     wire        RegWrite_IDEX;
     wire [1:0]  ALUOp_IDEX;
 
-    wire [31:0] PC_EXMEM;
-    wire [31:0] read_Address_EXMEM;
-    wire [31:0] write_Data_EXMEM;
+    wire signed [31:0] PC_EXMEM;
+    wire signed [31:0] read_Address_EXMEM;
+    wire signed [31:0] write_Data_EXMEM;
     wire [4:0]  rd_EXMEM;
     wire        branch_EXMEM;
     wire        zero_EXMEM;
@@ -31,24 +31,22 @@ module RISC_V_pp (
     wire        mem2reg_EXMEM;
     wire        RegWrite_EXMEM;
 
-    wire [31:0] memData_Out_MEMWB;
-    wire [31:0] ALU_result_MEMWB;
+    wire signed [31:0] memData_Out_MEMWB;
+    wire signed [31:0] ALU_result_MEMWB;
     wire [4:0]  rd_MEMWB;
     wire        PCSrc;
     wire        mem2reg_MEMWB;
     wire        RegWrite_MEMWB;
 
-    wire [31:0] memData_Out_MEM;
+    wire signed [31:0] memData_Out_MEM;
 
-    wire [31:0] alu_result_EXMEM;
+    wire signed [31:0] alu_result_EXMEM;
     wire PCWrite;
     wire Write_IFID;
     wire control_mux_sel;
 
     wire [1:0] ForwardA;
     wire [1:0] ForwardB;
-
-    wire [31:0] forward_data_MEMWB;
 
     IF_hazard instruction_fetch(.clk(clk),
                                 .rst_n(rst_n),
@@ -99,8 +97,6 @@ module RISC_V_pp (
                             .RegWrite_MEMWB(RegWrite_MEMWB),
                             .ForwardA(ForwardA),
                             .ForwardB(ForwardB));
-
-//    assign forward_data_MEMWB = mem2reg_MEMWB ? memData_Out_MEMWB : ALU_result_MEMWB;
 
     EX_hazard execute(.clk(clk),
                     .rst_n(rst_n),

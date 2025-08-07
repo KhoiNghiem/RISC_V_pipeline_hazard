@@ -2,8 +2,8 @@ module program_counter (
     input clk,
     input rst_n,
     input PCWrite,
-    input [31:0] PC_in,
-    output reg [31:0] PC_out
+    input signed [31:0] PC_in,
+    output reg signed [31:0] PC_out
 );
 
 always @(posedge clk or negedge rst_n) begin

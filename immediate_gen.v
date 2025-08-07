@@ -1,6 +1,6 @@
 module immediate_gen (
     input [31:0] instruction,
-    output reg [31:0] ImmExt
+    output reg signed [31:0] ImmExt
 );
 
 wire [6:0] opCode;

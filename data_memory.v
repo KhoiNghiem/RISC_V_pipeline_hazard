@@ -3,13 +3,13 @@ module data_memory (
     input rst_n,
     input memWrite,
     input memRead,
-    input [31:0] read_Address,
-    input [31:0] write_Data,
-    output [31:0] memData_Out
+    input signed [31:0] read_Address,
+    input signed [31:0] write_Data,
+    output signed [31:0] memData_Out
 );
 
     integer i;
-    reg [31:0] D_memory [63:0];
+    reg signed [31:0] D_memory [0:128];
 
     always @(posedge clk) begin
         D_memory[5] <= 32'd12;

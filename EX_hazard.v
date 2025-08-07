@@ -1,10 +1,10 @@
 module EX_hazard (
     input clk,
     input rst_n,
-    input [31:0] read_data1_IDEX,
-    input [31:0] read_data2_IDEX,
-    input [31:0] PC_IDEX,
-    input [31:0] imm_IDEX,
+    input signed [31:0] read_data1_IDEX,
+    input signed [31:0] read_data2_IDEX,
+    input signed [31:0] PC_IDEX,
+    input signed [31:0] imm_IDEX,
     input [31:0] instruc_IDEX,
     input [4:0]  rd_IDEX,
     input branch_IDEX,
@@ -14,14 +14,14 @@ module EX_hazard (
     input ALUSrc_IDEX,
     input RegWrite_IDEX,
     input [1:0] ALUOp_IDEX,
-    input [31:0] memData_Out_MEM,
-    input [31:0] alu_result_EXMEM,
+    input signed [31:0] memData_Out_MEM,
+    input signed [31:0] alu_result_EXMEM,
     input [1:0] ForwardA,
     input [1:0] ForwardB,
 
-    output reg [31:0] PC_EXMEM,
-    output reg [31:0] read_Address_EXMEM,
-    output reg [31:0] write_Data_EXMEM,
+    output reg signed [31:0] PC_EXMEM,
+    output reg signed [31:0] read_Address_EXMEM,
+    output reg signed [31:0] write_Data_EXMEM,
     output reg [4:0] rd_EXMEM,
     output reg branch_EXMEM,
     output reg zero_EXMEM,
@@ -31,12 +31,12 @@ module EX_hazard (
     output reg RegWrite_EXMEM 
 );
 
-    wire [31:0] alu_result_ex;
-    wire [31:0] mux_ex;
-    wire [31:0] mux3_1_ex;
-    wire [31:0] mux3_2_ex;
+    wire signed [31:0] alu_result_ex;
+    wire signed [31:0] mux_ex;
+    wire signed [31:0] mux3_1_ex;
+    wire signed [31:0] mux3_2_ex;
     wire [3:0]  ALUControl_out;
-    wire [31:0] pc_ex;
+    wire signed [31:0] pc_ex;
     wire        zero_ex;
 
     adder ex_add(.in_1(imm_IDEX),

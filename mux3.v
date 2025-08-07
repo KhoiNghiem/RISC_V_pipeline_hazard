@@ -1,9 +1,9 @@
 module mux3 (
     input  wire [1:0] sel,
-    input  wire [31:0] A,   // Default input (from register file)
-    input  wire [31:0] B,   // From MEM/WB stage
-    input  wire [31:0] C,   // From EX/MEM stage
-    output reg  [31:0] mux_out
+    input  wire signed [31:0] A,   // Default input (from register file)
+    input  wire signed [31:0] B,   // From MEM/WB stage
+    input  wire signed [31:0] C,   // From EX/MEM stage
+    output reg signed [31:0] mux_out
 );
 
     always @(*) begin

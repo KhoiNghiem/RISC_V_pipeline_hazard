@@ -1,0 +1,31 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../EX_hazard.v" \
+"../../../../../ID_hazard.v" \
+"../../../../../IF_hazard.v" \
+"../../../../../MEM_stage.v" \
+"../../../../../PCplus4.v" \
+"../../../../../RISC_V_pp.v" \
+"../../../../../WB_stage.v" \
+"../../../../../adder.v" \
+"../../../../../alu_control.v" \
+"../../../../../alu_unit.v" \
+"../../../../../and_logic.v" \
+"../../../../../control_unit.v" \
+"../../../../../data_memory.v" \
+"../../../../../flush_unit.v" \
+"../../../../../forwarding_unit.v" \
+"../../../../../hazard_detection_unit.v" \
+"../../../../../immediate_gen.v" \
+"../../../../../instruction_mem.v" \
+"../../../../../mux.v" \
+"../../../../../mux3.v" \
+"../../../../../program_counter.v" \
+"../../../../../register_file.v" \
+"../../../../../RISC_V_pp_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

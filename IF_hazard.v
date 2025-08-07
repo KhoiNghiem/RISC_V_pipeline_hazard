@@ -2,17 +2,17 @@ module IF_hazard (
     input clk,
     input rst_n,
     input PCSrc_IF,
-    input [31:0] PCTarget_IF,
+    input signed [31:0] PCTarget_IF,
     input PCWrite,
     input Write_IFID,
     input flush_IF,
     output [31:0] Instruc_IFID,
-    output [31:0] PC_IFID
+    output signed [31:0] PC_IFID
 );
-    wire [31:0] PC_next, PC_current, PC_plus4;
+    wire signed [31:0] PC_next, PC_current, PC_plus4;
     wire [31:0] instruction_fetched;
 
-    reg [31:0] IFID_PC;
+    reg signed [31:0] IFID_PC;
     // reg [31:0] IFID_PCPlus4;
     reg [31:0] IFID_Instruction;
 

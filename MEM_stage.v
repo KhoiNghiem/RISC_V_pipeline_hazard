@@ -1,8 +1,8 @@
 module MEM_stage (
     input clk,
     input rst_n,
-    input [31:0] read_Address_EXMEM,
-    input [31:0] write_Data_EXMEM,
+    input signed [31:0] read_Address_EXMEM,
+    input signed [31:0] write_Data_EXMEM,
     input [4:0] rd_EXMEM,
     input branch_EXMEM,
     input zero_EXMEM,
@@ -11,15 +11,15 @@ module MEM_stage (
     input mem2reg_EXMEM,
     input RegWrite_EXMEM,
 
-    output reg [31:0] memData_Out_MEMWB,
-    output reg [31:0] read_Address_MEMWB,
+    output reg signed [31:0] memData_Out_MEMWB,
+    output reg signed [31:0] read_Address_MEMWB,
     output reg [4:0] rd_MEMWB,
     output wire PCSrc,
     output reg mem2reg_MEMWB,
     output reg RegWrite_MEMWB
 );
     
-    wire [31:0] memData_Out;
+    wire signed [31:0] memData_Out;
 
     and_logic mem_and(.branch(branch_EXMEM),
                         .zero(zero_EXMEM),

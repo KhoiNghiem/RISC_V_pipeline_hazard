@@ -3,11 +3,11 @@ module register_file (
     input rst_n,
     input regWrite,
     input [4:0] rs1, rs2, rd,
-    input [31:0] write_Data,
-    output [31:0] read_data1, read_data2
+    input signed [31:0] write_Data,
+    output signed [31:0] read_data1, read_data2
 );
 
-    reg [31:0] registers [31:0];
+    reg signed [31:0] registers [0:31];
     integer i;
 
     always @(posedge clk or negedge rst_n) begin
@@ -15,11 +15,11 @@ module register_file (
             begin
                 registers[0] = 0;
                 registers[1] = 4;
-                registers[2] = 2;
+                registers[2] = 120;
                 registers[3] = 2;
                 registers[4] = 4;
                 registers[5] = 1;
-                registers[6] = 44;
+                registers[6] = 14;
                 registers[7] = 4;
                 registers[8] = 24;
                 registers[9] = 12;
@@ -53,7 +53,10 @@ module register_file (
         end
     end
 
-    assign read_data1 = registers[rs1];
-    assign read_data2 = registers[rs2];
+    // assign read_data1 = registers[rs1];
+    // assign read_data2 = registers[rs2];
+
+    assign read_data1 = (regWrite && (rd != 0) && (rd == rs1)) ? write_Data : registers[rs1];
+    assign read_data2 = (regWrite && (rd != 0) && (rd == rs2)) ? write_Data : registers[rs2];
     
 endmodule
