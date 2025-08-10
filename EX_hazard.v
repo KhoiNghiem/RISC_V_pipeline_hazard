@@ -4,31 +4,35 @@ module EX_hazard (
     input signed [31:0] read_data1_IDEX,
     input signed [31:0] read_data2_IDEX,
     input signed [31:0] PC_IDEX,
+    input signed [31:0] PC_plus4_IDEX,
     input signed [31:0] imm_IDEX,
     input [31:0] instruc_IDEX,
     input [4:0]  rd_IDEX,
     input branch_IDEX,
     input memRead_IDEX,
-    input mem2reg_IDEX,
+    input [1:0] mem2reg_IDEX,
     input memWrite_IDEX,
     input ALUSrc_IDEX,
     input RegWrite_IDEX,
+    input jump_IDEX,
     input [1:0] ALUOp_IDEX,
     input signed [31:0] memData_Out_MEM,
     input signed [31:0] alu_result_EXMEM,
     input [1:0] ForwardA,
     input [1:0] ForwardB,
 
-    output reg signed [31:0] PC_EXMEM,
+    output wire signed [31:0] PC_EXMEM,
+    output reg signed [31:0] PC_plus4_EXMEM,
     output reg signed [31:0] read_Address_EXMEM,
     output reg signed [31:0] write_Data_EXMEM,
     output reg [4:0] rd_EXMEM,
-    output reg branch_EXMEM,
-    output reg zero_EXMEM,
+    // output reg branch_EXMEM,
+    // output reg zero_EXMEM,
+    output wire PCSrc,
     output reg memRead_EXMEM,
     output reg memWrite_EXMEM,
-    output reg mem2reg_EXMEM,
-    output reg RegWrite_EXMEM 
+    output reg [1:0] mem2reg_EXMEM,
+    output reg RegWrite_EXMEM
 );
 
     wire signed [31:0] alu_result_ex;
@@ -36,12 +40,29 @@ module EX_hazard (
     wire signed [31:0] mux3_1_ex;
     wire signed [31:0] mux3_2_ex;
     wire [3:0]  ALUControl_out;
-    wire signed [31:0] pc_ex;
+    // wire signed [31:0] pc_ex;
     wire        zero_ex;
+    wire        and_out;
+    wire        taken;
+
+    branch_taken ex_branch(
+        .funct3(instruc_IDEX[14:12]),
+        .rs1(mux3_1_ex), // Dùng output đã forward
+        .rs2(mux3_2_ex), // Dùng output đã forward
+        .taken(taken)
+    );
+
+    and_logic ex_and(.branch(branch_IDEX),
+                        .zero(taken),
+                        .and_out(and_out));
+
+    or_logic ex_or(.jump_IDEX(jump_IDEX),
+                    .and_out(and_out),
+                    .or_out(PCSrc));
 
     adder ex_add(.in_1(imm_IDEX),
                 .in_2(PC_IDEX),
-                .sum_out(pc_ex));
+                .sum_out(PC_EXMEM));
 
     mux3 ex_mux1(.sel(ForwardA),
                 .A(read_data1_IDEX),
@@ -70,25 +91,28 @@ module EX_hazard (
                         .ALU_result(alu_result_ex),
                         .zero(zero_ex));
 
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            zero_EXMEM <= 0;
+            // zero_EXMEM <= 0;
             read_Address_EXMEM <= 0;
             write_Data_EXMEM <= 0;
-            PC_EXMEM <= 0;
+            // PC_EXMEM <= 0;
+            PC_plus4_EXMEM <= 0;
             rd_EXMEM <= 0;
-            branch_EXMEM <= 0;
+            // branch_EXMEM <= 0;
             memRead_EXMEM <= 0;
             memWrite_EXMEM <= 0;
             mem2reg_EXMEM <= 0;
             RegWrite_EXMEM <= 0;
         end else begin
-            zero_EXMEM <= zero_ex;
+            // zero_EXMEM <= zero_ex;
             read_Address_EXMEM <= alu_result_ex;
             write_Data_EXMEM <= mux3_2_ex;
-            PC_EXMEM <= pc_ex;
+            // PC_EXMEM <= pc_ex;
+            PC_plus4_EXMEM <= PC_plus4_IDEX;
             rd_EXMEM <= rd_IDEX;
-            branch_EXMEM <= branch_IDEX;
+            // branch_EXMEM <= branch_IDEX;
             memRead_EXMEM <= memRead_IDEX;
             memWrite_EXMEM <= memWrite_IDEX;
             mem2reg_EXMEM <= mem2reg_IDEX;

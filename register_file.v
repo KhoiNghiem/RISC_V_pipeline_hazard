@@ -27,7 +27,7 @@ module register_file (
                 registers[11] = 4;
                 registers[12] = 90;
                 registers[13] = 10;
-                registers[14] = 20;
+                registers[14] = 1000;
                 registers[15] = 30;
                 registers[16] = 40;
                 registers[17] = 50;
@@ -47,7 +47,7 @@ module register_file (
                 registers[31] = 10;
             end
         end else begin
-            if (regWrite) begin
+            if (regWrite && (rd != 5'd0)) begin
                 registers[rd] <= write_Data;
             end
         end

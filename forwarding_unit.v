@@ -10,24 +10,21 @@ module forwarding_unit (
 );
 
     always @(*) begin
-        // Default
-        ForwardA = 2'b00;
-        ForwardB = 2'b00;
-    
+
         // ForwardA logic
-        if (RegWrite_EXMEM && (rd_EXMEM != 0) && (rd_EXMEM == rs1_IDEX)) begin
+        if (RegWrite_EXMEM & (rd_EXMEM != 0) & (rd_EXMEM == rs1_IDEX)) begin
             ForwardA = 2'b10;
-        end else if (RegWrite_MEMWB && (rd_MEMWB != 0) && (rd_MEMWB == rs1_IDEX)) begin
+        end else if (RegWrite_MEMWB & (rd_MEMWB != 0) & !(RegWrite_EXMEM & (rd_EXMEM != 0) & (rd_EXMEM == rs1_IDEX)) & (rd_MEMWB == rs1_IDEX)) begin
             ForwardA = 2'b01;
-        end
+        end else 
+            ForwardA = 2'b00;
     
         // ForwardB logic
-        if (RegWrite_EXMEM && (rd_EXMEM != 0) && (rd_EXMEM == rs2_IDEX)) begin
+        if (RegWrite_EXMEM & (rd_EXMEM != 0) & (rd_EXMEM == rs2_IDEX)) begin
             ForwardB = 2'b10;
-        end else if (RegWrite_MEMWB && (rd_MEMWB != 0) && (rd_MEMWB == rs2_IDEX)) begin
+        end else if (RegWrite_MEMWB && (rd_MEMWB != 0) & !(RegWrite_EXMEM & (rd_EXMEM != 0) & (rd_EXMEM == rs2_IDEX)) & (rd_MEMWB == rs2_IDEX)) begin
             ForwardB = 2'b01;
-        end
+        end else
+            ForwardB = 2'b00;
     end
-    
-
 endmodule

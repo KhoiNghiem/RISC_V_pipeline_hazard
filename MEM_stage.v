@@ -4,26 +4,28 @@ module MEM_stage (
     input signed [31:0] read_Address_EXMEM,
     input signed [31:0] write_Data_EXMEM,
     input [4:0] rd_EXMEM,
-    input branch_EXMEM,
-    input zero_EXMEM,
+    input signed [31:0] PC_plus4_EXMEM,
+    // input branch_EXMEM,
+    // input zero_EXMEM,
     input memRead_EXMEM,
     input memWrite_EXMEM,
-    input mem2reg_EXMEM,
+    input [1:0] mem2reg_EXMEM,
     input RegWrite_EXMEM,
 
     output reg signed [31:0] memData_Out_MEMWB,
     output reg signed [31:0] read_Address_MEMWB,
     output reg [4:0] rd_MEMWB,
-    output wire PCSrc,
-    output reg mem2reg_MEMWB,
+    output reg signed [31:0] PC_plus4_MEMWB,  
+    // output wire PCSrc,
+    output reg [1:0] mem2reg_MEMWB,
     output reg RegWrite_MEMWB
 );
     
     wire signed [31:0] memData_Out;
 
-    and_logic mem_and(.branch(branch_EXMEM),
-                        .zero(zero_EXMEM),
-                        .and_out(PCSrc));
+    // and_logic mem_and(.branch(branch_EXMEM),
+    //                     .zero(zero_EXMEM),
+    //                     .and_out(PCSrc));
 
     data_memory mem_data_mem(.clk(clk),
                             .rst_n(rst_n),
@@ -38,12 +40,14 @@ module MEM_stage (
             memData_Out_MEMWB <= 0;
             read_Address_MEMWB <= 0;
             rd_MEMWB <= 0;
+            PC_plus4_MEMWB <= 0;
             mem2reg_MEMWB <= 0;
             RegWrite_MEMWB <= 0;
         end else begin
             memData_Out_MEMWB <= memData_Out;
             read_Address_MEMWB <= read_Address_EXMEM;
             rd_MEMWB <= rd_EXMEM;
+            PC_plus4_MEMWB <= PC_plus4_EXMEM;
             mem2reg_MEMWB <= mem2reg_EXMEM;
             RegWrite_MEMWB <= RegWrite_EXMEM;
         end

@@ -9,33 +9,38 @@ module RISC_V_pp (
     wire signed [31:0] read_data1_IDEX;
     wire signed [31:0] read_data2_IDEX;
     wire signed [31:0] PC_IDEX;
+    wire signed [31:0] PC_plus4_IDEX;
     wire signed [31:0] imm_IDEX;
     wire [31:0] instruc_IDEX;
     wire [4:0]  rd_IDEX;
     wire        branch_IDEX;
     wire        memRead_IDEX;
-    wire        mem2reg_IDEX;
+    wire [1:0]  mem2reg_IDEX;
     wire        memWrite_IDEX;
     wire        ALUSrc_IDEX;
     wire        RegWrite_IDEX;
+    wire        jump_IDEX;
     wire [1:0]  ALUOp_IDEX;
 
     wire signed [31:0] PC_EXMEM;
+    wire signed [31:0] PC_plus4_EXMEM;
     wire signed [31:0] read_Address_EXMEM;
     wire signed [31:0] write_Data_EXMEM;
     wire [4:0]  rd_EXMEM;
-    wire        branch_EXMEM;
-    wire        zero_EXMEM;
+    // wire        branch_EXMEM;
+    // wire        zero_EXMEM;
     wire        memRead_EXMEM;
     wire        memWrite_EXMEM;
-    wire        mem2reg_EXMEM;
+    wire [1:0]  mem2reg_EXMEM;
     wire        RegWrite_EXMEM;
 
     wire signed [31:0] memData_Out_MEMWB;
     wire signed [31:0] ALU_result_MEMWB;
+    wire signed [31:0] PC_plus4_MEMWB;
+
     wire [4:0]  rd_MEMWB;
     wire        PCSrc;
-    wire        mem2reg_MEMWB;
+    wire [1:0]  mem2reg_MEMWB;
     wire        RegWrite_MEMWB;
 
     wire signed [31:0] memData_Out_MEM;
@@ -43,10 +48,14 @@ module RISC_V_pp (
     wire signed [31:0] alu_result_EXMEM;
     wire PCWrite;
     wire Write_IFID;
+    wire signed [31:0] PC_plus4_IFID;
     wire control_mux_sel;
 
     wire [1:0] ForwardA;
     wire [1:0] ForwardB;
+    wire lwStall;
+    wire flush_ID;
+    wire flush_IF;
 
     IF_hazard instruction_fetch(.clk(clk),
                                 .rst_n(rst_n),
@@ -56,7 +65,8 @@ module RISC_V_pp (
                                 .PCTarget_IF(PC_EXMEM),
                                 .flush_IF(flush_IF),
                                 .Instruc_IFID(Instruc_IFID),
-                                .PC_IFID(PC_IFID));
+                                .PC_IFID(PC_IFID),
+                                .PC_plus4_IFID(PC_plus4_IFID));
 
     hazard_detection_unit hazard_det_unit(.MemRead_IDEX(memRead_IDEX),
                                         .rs1_IFID(Instruc_IFID[19:15]),
@@ -64,19 +74,26 @@ module RISC_V_pp (
                                         .rd_IDEX(rd_IDEX),
                                         .PCWrite(PCWrite),
                                         .Write_IFID(Write_IFID),
-                                        .control_mux_sel(control_mux_sel));
+                                        .control_mux_sel(control_mux_sel),
+                                        .lwStall(lwStall));
+
+    assign flush_IF = PCSrc;
+    assign flush_ID = lwStall | PCSrc;
 
     ID_hazard instruction_decode(.clk(clk),
                                 .rst_n(rst_n),
                                 .Instruc_IFID(Instruc_IFID),
                                 .PC_IFID(PC_IFID),
+                                .PC_plus4_IFID(PC_plus4_IFID),
                                 .write_Data(memData_Out_MEM),
                                 .rd(rd_MEMWB),
                                 .RegWrite(RegWrite_MEMWB),
                                 .control_mux_sel(control_mux_sel),
+                                .flush_ID(flush_ID),
                                 .read_data1_IDEX(read_data1_IDEX),
                                 .read_data2_IDEX(read_data2_IDEX),
                                 .PC_IDEX(PC_IDEX),
+                                .PC_plus4_IDEX(PC_plus4_IDEX),
                                 .imm_IDEX(imm_IDEX),
                                 .instruc_IDEX(instruc_IDEX),
                                 .rd_IDEX(rd_IDEX),
@@ -86,8 +103,8 @@ module RISC_V_pp (
                                 .memWrite_IDEX(memWrite_IDEX),
                                 .ALUSrc_IDEX(ALUSrc_IDEX),
                                 .RegWrite_IDEX(RegWrite_IDEX),
-                                .ALUOp_IDEX(ALUOp_IDEX),
-                                .flush_IF(flush_IF));
+                                .jump_IDEX(jump_IDEX),
+                                .ALUOp_IDEX(ALUOp_IDEX));
 
     forwarding_unit forward(.rs1_IDEX(instruc_IDEX[19:15]),
                             .rs2_IDEX(instruc_IDEX[24:20]),
@@ -103,6 +120,7 @@ module RISC_V_pp (
                     .read_data1_IDEX(read_data1_IDEX),
                     .read_data2_IDEX(read_data2_IDEX),
                     .PC_IDEX(PC_IDEX),
+                    .PC_plus4_IDEX(PC_plus4_IDEX),
                     .imm_IDEX(imm_IDEX),
                     .instruc_IDEX(instruc_IDEX),
                     .rd_IDEX(rd_IDEX),
@@ -112,6 +130,7 @@ module RISC_V_pp (
                     .memWrite_IDEX(memWrite_IDEX),
                     .ALUSrc_IDEX(ALUSrc_IDEX),
                     .RegWrite_IDEX(RegWrite_IDEX),
+                    .jump_IDEX(jump_IDEX),
                     .ALUOp_IDEX(ALUOp_IDEX),
                     .memData_Out_MEM(memData_Out_MEM),
                     .alu_result_EXMEM(alu_result_EXMEM),
@@ -121,8 +140,10 @@ module RISC_V_pp (
                     .read_Address_EXMEM(read_Address_EXMEM),
                     .write_Data_EXMEM(write_Data_EXMEM),
                     .rd_EXMEM(rd_EXMEM),
-                    .branch_EXMEM(branch_EXMEM),
-                    .zero_EXMEM(zero_EXMEM),
+                    .PC_plus4_EXMEM(PC_plus4_EXMEM),
+                    .PCSrc(PCSrc),
+                    // .branch_EXMEM(branch_EXMEM),
+                    // .zero_EXMEM(zero_EXMEM),
                     .memRead_EXMEM(memRead_EXMEM),
                     .memWrite_EXMEM(memWrite_EXMEM),
                     .mem2reg_EXMEM(mem2reg_EXMEM),
@@ -135,8 +156,9 @@ module RISC_V_pp (
                     .read_Address_EXMEM(read_Address_EXMEM),
                     .write_Data_EXMEM(write_Data_EXMEM),
                     .rd_EXMEM(rd_EXMEM),
-                    .branch_EXMEM(branch_EXMEM),
-                    .zero_EXMEM(zero_EXMEM),
+                    .PC_plus4_EXMEM(PC_plus4_EXMEM),
+                    // .branch_EXMEM(branch_EXMEM),
+                    // .zero_EXMEM(zero_EXMEM),
                     .memRead_EXMEM(memRead_EXMEM),
                     .memWrite_EXMEM(memWrite_EXMEM),
                     .mem2reg_EXMEM(mem2reg_EXMEM),
@@ -144,12 +166,14 @@ module RISC_V_pp (
                     .memData_Out_MEMWB(memData_Out_MEMWB),
                     .read_Address_MEMWB(ALU_result_MEMWB),
                     .rd_MEMWB(rd_MEMWB),
-                    .PCSrc(PCSrc),
+                    .PC_plus4_MEMWB(PC_plus4_MEMWB),
+                    // .PCSrc(PCSrc),
                     .mem2reg_MEMWB(mem2reg_MEMWB),
                     .RegWrite_MEMWB(RegWrite_MEMWB));
 
     WB_stage write_back(.memData_Out_MEMWB(memData_Out_MEMWB),
                         .read_Address_MEMWB(ALU_result_MEMWB),
+                        .PC_plus4_MEMWB(PC_plus4_MEMWB),
                         .mem2reg_MEMWB(mem2reg_MEMWB),
                         .memData_Out_MEM(memData_Out_MEM));
 
