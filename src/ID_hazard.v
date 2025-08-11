@@ -25,7 +25,7 @@ module ID_hazard (
     output reg        ALUSrc_IDEX,
     output reg        RegWrite_IDEX,
     output reg        jump_IDEX,
-    output reg [1:0]  ALUOp_IDEX,
+    output reg [1:0]  ALUOp_IDEX
     // output flush_IF
     // output flush_ID
 ); 

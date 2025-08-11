@@ -10,7 +10,7 @@ module instruction_mem (
     assign instruction_out = I_mem[PC_in[31:2]];
 
     initial begin
-        $readmemh("D:/Learning/DSR_Lab/RISC_V/code/hazard/hex_data/for_test.hex", I_mem); // mỗi dòng 1 lệnh 32-bit
+        $readmemh("D:/Learning/DSR_Lab/RISC_V/code/hazard/hex_data/adivb.hex", I_mem); // mỗi dòng 1 lệnh 32-bit
     end
 
     // initial begin
